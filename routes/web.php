@@ -24,4 +24,6 @@ Route::prefix('/payment')->group( function () {
     });
     Route::get('method', 'Controller@paymentMethod');
     Route::post('make', 'Controller@makePayment');
+
+    Route::get('create-link', 'Controller@createLink');
 });

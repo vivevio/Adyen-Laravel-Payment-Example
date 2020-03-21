@@ -9,6 +9,8 @@ use Illuminate\Routing\Controller as BaseController;
 
 use Illuminate\Http\Request;
 
+use GuzzleHttp\Client;
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -83,5 +85,54 @@ class Controller extends BaseController
             // $result['resultCode']
             return response()->json($result);
         }
+    }
+
+    public function createLink(Request $req)
+    {
+
+        $json = '{
+            "reference": "91002323",
+            "amount": {
+              "value": 3000,
+              "currency": "IDR"
+            },
+            "countryCode": "BR",
+            "merchantAccount": "'. $this->merchantAccount .'",
+            "shopperReference": "91",
+            "shopperEmail": "test@email.com",
+            "shopperLocale": "id_ID",
+            "billingAddress": {
+              "street": "Roque Petroni Jr",
+              "postalCode": "59000060",
+              "city": "São Paulo",
+              "houseNumberOrName": "999",
+              "country": "BR",
+              "stateOrProvince": "SP"
+            },
+            "deliveryAddress": {
+              "street": "Roque Petroni Jr",
+              "postalCode": "59000060",
+              "city": "São Paulo",
+              "houseNumberOrName": "999",
+              "country": "BR",
+              "stateOrProvince": "SP"
+            }
+        }';
+
+
+        $client = new Client(['base_uri' => 'https://checkout-test.adyen.com']);
+
+        $options = [
+            'headers' => [
+                'X-Api-Key'     => $this->appKey,
+                'Content-Type'  => 'application/json'
+            ],
+            'json' => json_decode($json,true)
+        ];
+
+        $res = $client->request('POST', '/v52/paymentLinks', $options);
+        
+        return response()->json(json_decode($res->getBody()));
+        
     }
 }

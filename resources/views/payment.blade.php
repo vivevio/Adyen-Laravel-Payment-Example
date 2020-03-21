@@ -24,6 +24,7 @@
             <div class="col-5 mt-3">
                 <h2>Payment</h2>
                 <button onclick="return pay()" class="btn btn-primary">Pay</button>
+                <button onclick="return payByLink()" class="btn btn-primary">Pay by Link</button>
             </div>
         </div>
     </div>
@@ -42,6 +43,29 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
     <script>
+
+        window.payByLink = function() {
+            Swal.fire({
+                title: 'Proccesing Payment...',
+                showConfirmButton: false
+            })
+
+            fetch('/payment/create-link').then(function(res){ return res.json() })
+            .then( async function(response){
+                swal.close()
+
+                
+                var strWindowFeatures = "location=yes,height=600,width=520,scrollbars=no,status=no";
+                var URL = response.url
+                var win = window.open(URL, "_blank", strWindowFeatures);
+
+                setTimeout(function(){
+                    window.location = '/'
+                }, 2000 )
+
+                // console.log('ss')
+            })
+        }
 
         window.makePayment = function(data) {
             return fetch('/payment/make', {
