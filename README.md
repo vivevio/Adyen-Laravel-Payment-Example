@@ -2,6 +2,6 @@
 
 ## How to Run
 
-- composer install
-- php artisan serve
-- access routes /payment
+1. composer install
+2. php artisan serve
+3. access routes /payment
